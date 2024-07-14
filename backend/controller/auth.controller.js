@@ -5,7 +5,6 @@ export const signup = async (req, res) => {
     
     try {
         const { fullName, username, password, confirmPassword, gender } = req.body
-
         if (password !== confirmPassword) {
             return res.status(400).json({ error: "passwords dont match" })
         }
@@ -34,6 +33,7 @@ export const signup = async (req, res) => {
                 gender: newUser.gender,
                 profilePic: newUser.profilePic
             })
+            // console.log(newUser);
         } else {
             res.status(500).json({ error: "incorrect user data " })
         }
@@ -77,7 +77,7 @@ export const login = async (req, res) => {
 export const logout = async(req, res) => {
     try {
     res.cookie("jwt","",{maxAge:0}    )
-    res.status(200).json({ error: "logged out successfully" })
+    res.status(200).json({ message: "logged out successfully" })
 
     } catch (error) {
         console.log("error in login controller", error.message)
