@@ -1,5 +1,5 @@
 import { useAuthContext } from "../../../context/AuthContext";
-import { extractTime } from "../../../../backend/util/extracTime";
+import { extractTime } from "../../utils/extractTime";
 import useConversation from "../../zustand/useConversation";
 
 const Message = ({ message }) => {

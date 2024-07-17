@@ -33,7 +33,6 @@ export const signup = async (req, res) => {
                 gender: newUser.gender,
                 profilePic: newUser.profilePic
             })
-            // console.log(newUser);
         } else {
             res.status(500).json({ error: "incorrect user data " })
         }

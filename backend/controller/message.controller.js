@@ -1,13 +1,12 @@
 import Conversation from "../model/conversation.model.js";
 import Message from "../model/message.model.js";
-
+import {getReceiverSocketId,io} from "../socket/socket.js"
 export const sendMessage = async (req, res) => {
     try {
         const { message } = req.body;
         const { id: receiverId } = req.params; // Corrected spelling here
         const senderId = req.user._id;  // Corrected this line
 
-        console.log(senderId);
 
         let conversation = await Conversation.findOne({
             participants: { $all: [senderId, receiverId] } // Corrected spelling here
@@ -24,12 +23,16 @@ export const sendMessage = async (req, res) => {
             receiverId, // Corrected spelling here
             message
         });
-
         if (newMessage) {
             conversation.messages.push(newMessage._id);
         }
 
         await Promise.all([conversation.save(), newMessage.save()]);
+        const receiverSocketId = getReceiverSocketId(receiverId);
+		if (receiverSocketId) {
+			// io.to(<socket_id>).emit() used to send events to specific client
+			io.to(receiverSocketId).emit("newMessage", newMessage);
+		}
         res.status(200).json(newMessage);
     } catch (error) {
         console.log("error in sending message", error.message);
